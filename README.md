@@ -220,14 +220,6 @@ import { ErrorDisplay } from './utils/errorHandling';
 
 ## 🛠️ Développement
 
-### Variables d'environnement
-
-Créez un fichier `.env` à la racine:
-
-```env
-VITE_API_URL=http://localhost:5000
-VITE_STRIPE_PUBLIC_KEY=your_stripe_key
-```
 
 ### Scripts disponibles
 
