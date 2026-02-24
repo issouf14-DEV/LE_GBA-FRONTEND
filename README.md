@@ -68,7 +68,7 @@ gba-frontend/
 │   ├── assets/                 # Images et ressources
 │   ├── components/             # Composants réutilisables
 │   │   ├── admin/             # Composants admin
-│   │   ├── common/            # Composants communs ✨ NOUVEAUX
+│   │   ├── common/            # Composants communs 
 │   │   │   ├── Pagination.jsx
 │   │   │   ├── Skeleton.jsx
 │   │   │   └── OptimizedImage.jsx
@@ -76,33 +76,33 @@ gba-frontend/
 │   ├── context/               # Context API
 │   │   ├── AuthContext.jsx
 │   │   ├── CartContext.jsx
-│   │   └── ToastContext.jsx   ✨ NOUVEAU
-│   ├── hooks/                 # Hooks personnalisés ✨ NOUVEAUX
+│   │   └── ToastContext.jsx   
+│   ├── hooks/                 # Hooks personnalisés 
 │   │   ├── useAuth.js
 │   │   ├── useCart.js
-│   │   ├── useToast.js        ✨ NOUVEAU
-│   │   ├── useFormValidation.js ✨ NOUVEAU
-│   │   ├── useCache.js        ✨ NOUVEAU
-│   │   └── useAdvancedFilter.js ✨ NOUVEAU
+│   │   ├── useToast.js        
+│   │   ├── useFormValidation.js 
+│   │   ├── useCache.js        
+│   │   └── useAdvancedFilter.js 
 │   ├── layouts/               # Layouts de page
 │   ├── pages/                 # Pages de l'application
 │   │   ├── Admin/            # Pages admin
 │   │   ├── Client/           # Pages client
-│   │   ├── ProfileImproved.jsx ✨ NOUVEAU
-│   │   └── VehiclesExample.jsx ✨ EXEMPLE
-│   ├── utils/                # Utilitaires ✨ NOUVEAUX
+│   │   ├── ProfileImproved.jsx 
+│   │   └── VehiclesExample.jsx 
+│   ├── utils/                # Utilitaires 
 │   │   ├── constants.js
-│   │   ├── errorHandling.js  ✨ NOUVEAU
-│   │   └── export.js         ✨ NOUVEAU
+│   │   ├── errorHandling.js  
+│   │   └── export.js         
 │   ├── App.jsx               # Point d'entrée
 │   ├── routes.jsx            # Configuration des routes
 │   └── index.css             # Styles globaux
 │
-├── AMELIORATIONS.md          ✨ NOUVEAU
-├── GUIDE_IMPLEMENTATION.md   ✨ NOUVEAU
-├── TODO_MANUEL.md            ✨ NOUVEAU
-├── AIDE_MEMOIRE.md           ✨ NOUVEAU
-└── RECAPITULATIF.md          ✨ NOUVEAU
+├── AMELIORATIONS.md          
+├── GUIDE_IMPLEMENTATION.md   
+├── TODO_MANUEL.md            
+├── AIDE_MEMOIRE.md           
+└── RECAPITULATIF.md          
 ```
 
 ---
