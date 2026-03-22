@@ -155,9 +155,9 @@ const Login = () => {
               <div>
                 <div className="flex items-center justify-between text-sm">
                   <label htmlFor="password" className="font-medium text-gray-700">Mot de passe</label>
-                  <a href="#" className="font-semibold text-red-500 hover:text-red-600">
+                  <Link to="/forgot-password" className="font-semibold text-red-500 hover:text-red-600">
                     Mot de passe oublié ?
-                  </a>
+                  </Link>
                 </div>
                 <div className="mt-1 flex items-center gap-3 rounded-2xl border border-gray-200 bg-white px-4 py-3 shadow-sm focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-200">
                   <Lock className="h-5 w-5 text-red-400" />
