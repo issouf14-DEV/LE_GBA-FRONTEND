@@ -117,7 +117,7 @@ const Register = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-red-900/90 via-red-800/80 to-black/70" />
           <div className="relative z-10 space-y-6">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em]">
-              <Car className="h-4 w-4" /> Profil Premium
+              <Car className="h-4 w-4" /> LE-GBA
             </span>
             <h2 className="text-3xl font-black leading-tight">Inscrivez-vous et bénéficiez d’un accompagnement sur mesure pour trouver votre prochaine voiture.</h2>
             <ul className="space-y-4 text-sm text-white/80">

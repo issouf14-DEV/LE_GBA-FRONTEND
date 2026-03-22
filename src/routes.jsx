@@ -16,6 +16,8 @@ import About from './pages/About';
 import Services from './pages/Services';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 // Import des pages protégées
 import Checkout from './pages/Checkout';
@@ -99,6 +101,8 @@ const AppRoutes = () => {
           <Register />
         </PublicRoute>
       } />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
       {/* Routes publiques avec MainLayout - Accessibles sans connexion */}
       <Route element={<MainLayout />}>

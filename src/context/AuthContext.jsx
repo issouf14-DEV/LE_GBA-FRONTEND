@@ -79,16 +79,20 @@ export const AuthProvider = ({ children }) => {
         });
         const userData = response.data;
         if (userData) {
+          // Récupérer la photo de profil sauvegardée localement (le backend ne la stocke pas)
+          const savedProfiles = JSON.parse(localStorage.getItem('userProfiles') || '{}');
+          const savedProfile = savedProfiles[userData.email] || {};
+
           const user = {
             id: userData.id || userData._id,
             name: userData.name,
             email: userData.email,
             role: userData.role,
-            phone: userData.phone || '',
-            address: userData.address || '',
-            profileImage: userData.profileImage || null,
-            firstName: userData.firstName || '',
-            lastName: userData.lastName || ''
+            phone: userData.phone || savedProfile.phone || '',
+            address: userData.address || savedProfile.address || '',
+            profileImage: userData.profileImage || savedProfile.profileImage || null,
+            firstName: userData.firstName || savedProfile.firstName || '',
+            lastName: userData.lastName || savedProfile.lastName || ''
           };
           setUser(user);
           localStorage.setItem('user', JSON.stringify(user));
