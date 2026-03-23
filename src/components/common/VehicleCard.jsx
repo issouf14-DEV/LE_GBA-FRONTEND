@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import { CartContext } from "../../context/CartContext";
 import { carImages, getRandomCarImage } from "../../assets/carImages";
 
 export default function VehicleCard({ vehicle }) {
   const navigate = useNavigate();
+  const { isAuthenticated } = useContext(AuthContext);
+  const { addToCart } = useContext(CartContext);
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -124,23 +128,18 @@ export default function VehicleCard({ vehicle }) {
 
         {/* Actions */}
         <div className="flex gap-3">
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/vehicles/${vehicle._id}`);
+              if (!isAuthenticated) {
+                navigate('/login', { state: { from: { pathname: `/vehicles/${vehicle._id}` } } });
+                return;
+              }
+              addToCart(vehicle);
             }}
-            className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            className="flex-1 bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors"
           >
-            Réserver
-          </button>
-          <button 
-            onClick={(e) => {
-              e.stopPropagation();
-              // Action pour ajouter aux favoris
-            }}
-            className="px-4 py-3 border border-gray-300 rounded-lg hover:border-red-400 hover:text-red-500 transition-colors"
-          >
-            ❤️
+            Ajouter au panier
           </button>
         </div>
       </div>

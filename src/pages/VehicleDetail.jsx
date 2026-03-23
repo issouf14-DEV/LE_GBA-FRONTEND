@@ -2,8 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { vehiclesAPI } from "../api/vehicles";
 import { CartContext } from "../context/CartContext";
+import { AuthContext } from "../context/AuthContext";
 import Loader from "../components/common/Loading";
-import { ShoppingCart, ArrowLeft, Star, Heart, Calendar, Gauge, Fuel, Settings } from "lucide-react";
+import { ShoppingCart, ArrowLeft, Heart, Calendar, Gauge, Fuel, Settings } from "lucide-react";
 import { formatPrice } from "../utils/helpers";
 
 export default function VehicleDetail() {
@@ -13,6 +14,7 @@ export default function VehicleDetail() {
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
   const { addToCart } = useContext(CartContext);
+  const { isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     fetchVehicle();
@@ -212,7 +214,13 @@ export default function VehicleDetail() {
               {formatPrice(vehicle.price)}
             </p>
             <button
-              onClick={() => addToCart(vehicle)}
+              onClick={() => {
+                if (!isAuthenticated) {
+                  navigate('/login', { state: { from: { pathname: `/vehicles/${id}` } } });
+                  return;
+                }
+                addToCart(vehicle);
+              }}
               className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-red-600 to-red-500 text-white py-4 rounded-xl hover:from-red-500 hover:to-red-600 transition font-bold text-lg shadow-lg hover:shadow-xl"
             >
               <ShoppingCart size={24} />

@@ -81,8 +81,22 @@ const Register = () => {
       lastName: formData.lastName
     };
     
+    // Sauvegarder la photo de profil dans userProfiles AVANT register
+    // pour qu'elle soit disponible au login (le backend ne stocke pas les images base64)
+    if (imagePreview && userData.email) {
+      const savedProfiles = JSON.parse(localStorage.getItem('userProfiles') || '{}');
+      savedProfiles[userData.email] = {
+        phone: userData.phone,
+        address: userData.address,
+        profileImage: imagePreview,
+        firstName: formData.firstName,
+        lastName: formData.lastName
+      };
+      localStorage.setItem('userProfiles', JSON.stringify(savedProfiles));
+    }
+
     const result = await register(userData);
-    
+
     if (result.success) {
       // Envoyer l'email de bienvenue automatiquement
       sendWelcomeEmail({
@@ -95,13 +109,13 @@ const Register = () => {
       }).catch(() => {
         // Silencieux - ne pas bloquer l'inscription
       });
-      
+
       // Rediriger vers la page de connexion après l'inscription
-      navigate('/login', { 
-        state: { 
-          message: 'Bienvenue chez GBA ! Connectez-vous pour réserver. ☎️ 0503713115',
-          email: formData.email 
-        } 
+      navigate('/login', {
+        state: {
+          message: 'Bienvenue chez GBA ! Connectez-vous pour réserver.',
+          email: formData.email
+        }
       });
     } else {
       setError(result.message);
