@@ -4,6 +4,13 @@ import animate from 'tailwindcss-animate';
 export default {
   darkMode: ['class'],
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  // Variantes BEM composées dynamiquement (`alert--${variant}`) : invisibles pour Tailwind
+  safelist: [
+    {
+      pattern:
+        /^(auth-card|auth-aside|alert|empty-state|feature-card|feature-grid|toast|role-select|stepper__step|hero__glow)--/,
+    },
+  ],
   theme: {
     extend: {
       colors: {

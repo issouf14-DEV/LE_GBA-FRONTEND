@@ -1,12 +1,20 @@
 import { CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+// Noms de classes écrits en entier : Tailwind supprime ceux qu'il ne trouve pas dans le code
+const VARIANTS = {
+  login: { card: 'auth-card--login', aside: 'auth-aside--login' },
+  register: { card: 'auth-card--register', aside: 'auth-aside--register' },
+};
+
 // Carte en deux colonnes : visuel à gauche, formulaire à droite
 export function AuthLayout({ variant = 'login', aside, title, subtitle, children }) {
+  const classes = VARIANTS[variant] ?? VARIANTS.login;
+
   return (
     <div className="auth-page">
-      <div className={cn('auth-card', `auth-card--${variant}`)}>
-        <aside className={cn('auth-aside', `auth-aside--${variant}`)}>
+      <div className={cn('auth-card', classes.card)}>
+        <aside className={cn('auth-aside', classes.aside)}>
           <div className="auth-aside__overlay" />
           <div className="auth-aside__content">
             <span className="auth-badge">

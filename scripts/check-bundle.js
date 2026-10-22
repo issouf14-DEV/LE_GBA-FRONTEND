@@ -40,6 +40,17 @@ for (const file of listFiles(DIST)) {
   }
 }
 
+// Variantes CSS (.bloc--variante) définies dans style.css mais retirées du build par Tailwind
+const MODIFIER = /\.[a-z][a-z-]*(?:__[a-z-]+)?--[a-z0-9-]+/g;
+const builtCss = listFiles(DIST)
+  .filter((file) => file.endsWith('.css'))
+  .map((file) => readFileSync(file, 'utf8'))
+  .join('');
+const built = new Set(builtCss.match(MODIFIER));
+for (const name of new Set(readFileSync('src/styles/style.css', 'utf8').match(MODIFIER))) {
+  if (!built.has(name)) problems.push(`${name} : classe absente du CSS (ajoutez-la au safelist)`);
+}
+
 if (problems.length > 0) {
   console.error(problems.join('\n'));
   console.error(`\n${problems.length} problème(s) de sécurité dans le build.`);
