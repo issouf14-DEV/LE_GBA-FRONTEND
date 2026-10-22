@@ -1,33 +1,16 @@
-import axios from "axios";
+import client from '@/api/client';
 
-// En dev, utiliser le proxy Vite (/api), en prod utiliser l'URL complète
-const isDev = import.meta.env.DEV;
-const API_URL = isDev ? '' : (import.meta.env.VITE_API_URL || 'https://le-gba-backend.onrender.com');
-
-const API = axios.create({
-  baseURL: `${API_URL}/api`,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
-
-API.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
+// La session est portée par des cookies httpOnly : aucune de ces réponses ne contient de token
 export const authAPI = {
-  register: (userData) => API.post("/auth/register", userData),
-  login: (credentials) => API.post("/auth/login", credentials),
-  logout: () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-  },
-  getProfile: () => API.get("/auth/profile"),
-  updateProfile: (userData) => API.put("/auth/profile", userData),
+  register: (userData) => client.post('/auth/register', userData),
+  login: (credentials) => client.post('/auth/login', credentials),
+  logout: () => client.post('/auth/logout'),
+  getProfile: () => client.get('/auth/profile'),
+  updateProfile: (payload) => client.put('/auth/profile', payload),
+  changePassword: (payload) => client.put('/auth/password', payload),
+  forgotPassword: (email) => client.post('/auth/forgot-password', { email }),
+  // Le token voyage dans le corps de la requête, jamais dans l'URL (logs, proxys)
+  resetPassword: (token, password) => client.post('/auth/reset-password', { token, password }),
 };
 
-export default API
+export default authAPI;

@@ -1,58 +1,15 @@
-import API from "./auth";
-import { mockAPI } from '../utils/mockData';
+import client from '@/api/client';
+
+const id = (value) => encodeURIComponent(value);
+const toList = (data, key) => (Array.isArray(data) ? data : data?.[key] || []);
 
 export const adminAPI = {
-  getStats: async () => {
-    try {
-      return await API.get("/admin/stats");
-    } catch (error) {
-      console.warn('⚠️ Utilisation des données simulées');
-      return await mockAPI.stats.get();
-    }
-  },
-
-  getUsers: async (page = 1, limit = 20) => {
-    try {
-      return await API.get("/admin/users", { params: { page, limit } });
-    } catch (error) {
-      console.warn('⚠️ Utilisation des données simulées');
-      return await mockAPI.users.getAll();
-    }
-  },
-
-  createUser: async (userData) => {
-    try {
-      return await API.post("/admin/users", userData);
-    } catch (error) {
-      console.warn('⚠️ Utilisation des données simulées');
-      return await mockAPI.users.create(userData);
-    }
-  },
-
-  updateUserRole: async (userId, role) => {
-    try {
-      return await API.put(`/admin/users/${userId}`, { role });
-    } catch (error) {
-      console.warn('⚠️ Utilisation des données simulées');
-      return await mockAPI.users.update(userId, { role });
-    }
-  },
-
-  deleteUser: async (userId) => {
-    try {
-      return await API.delete(`/admin/users/${userId}`);
-    } catch (error) {
-      console.warn('⚠️ Utilisation des données simulées');
-      return await mockAPI.users.delete(userId);
-    }
-  },
-
-  getVehicleStats: async () => {
-    try {
-      return await API.get("/admin/vehicles/stats");
-    } catch (error) {
-      console.warn('⚠️ Utilisation des données simulées');
-      return await mockAPI.stats.get();
-    }
-  },
+  getUsers: async (params = { page: 1, limit: 50 }) =>
+    toList((await client.get('/admin/users', { params })).data, 'users'),
+  createUser: async (user) => (await client.post('/admin/users', user)).data,
+  updateUserRole: async (userId, role) =>
+    (await client.put(`/admin/users/${id(userId)}`, { role })).data,
+  deleteUser: async (userId) => (await client.delete(`/admin/users/${id(userId)}`)).data,
 };
+
+export default adminAPI;

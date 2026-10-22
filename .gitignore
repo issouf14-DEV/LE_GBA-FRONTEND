@@ -32,3 +32,5 @@ dist-ssr
 .env.test
 netlify/functions/.env
 netlify/functions/.env.local
+# Captures générées par les tests e2e
+screenshots

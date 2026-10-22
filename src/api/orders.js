@@ -1,95 +1,25 @@
-import API from "./auth";
-import { mockAPI } from '../utils/mockData';
+import client from '@/api/client';
 
+const id = (value) => encodeURIComponent(value);
+const toList = (data) => (Array.isArray(data) ? data : data?.orders || []);
+const emit = (name, detail) => window.dispatchEvent(new CustomEvent(name, { detail }));
+
+// Le serveur calcule le prix et fixe le statut : le client n'envoie que sa demande
 export const ordersAPI = {
-  createOrder: async (orderData) => {
-    try {
-      const response = await API.post("/orders", orderData);
-      
-      // Déclencher un événement pour notifier l'admin
-      window.dispatchEvent(new CustomEvent('newOrder', {
-        detail: { order: response.data }
-      }));
-      
-      return response;
-    } catch (error) {
-      console.warn('⚠️ Utilisation des données simulées');
-      const response = await mockAPI.orders.create(orderData);
-      
-      // Déclencher un événement même en mode mock
-      window.dispatchEvent(new CustomEvent('newOrder', {
-        detail: { order: response.data }
-      }));
-      
-      return response;
-    }
+  create: async (order) => {
+    const { data } = await client.post('/orders', order);
+    emit('newOrder', { order: data });
+    return data;
   },
-
-  getMyOrders: async () => {
-    try {
-      return await API.get("/orders/my-orders");
-    } catch (error) {
-      console.warn('⚠️ Utilisation des données simulées');
-      return await mockAPI.orders.getAll();
-    }
+  getMine: async () => toList((await client.get('/orders/mine')).data),
+  getAll: async (params = { limit: 100 }) => toList((await client.get('/orders', { params })).data),
+  // Admin : en_attente | validee | rejetee | terminee (l'email au client est envoyé par le serveur)
+  updateStatus: async (orderId, status, order = null) => {
+    const { data } = await client.patch(`/orders/${id(orderId)}/status`, { status });
+    emit('orderStatusUpdated', { orderId, status, order: order || data });
+    return data;
   },
-
-  getOrderById: async (id) => {
-    try {
-      return await API.get(`/orders/${id}`);
-    } catch (error) {
-      console.warn('⚠️ Utilisation des données simulées');
-      return await mockAPI.orders.getById(id);
-    }
-  },
-
-  updateOrderStatus: async (id, status, orderDetails = null) => {
-    try {
-      const response = await API.put(`/orders/${id}`, { status });
-      
-      // Déclencher un événement pour notifier le client
-      window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
-        detail: { orderId: id, status, order: orderDetails || response.data }
-      }));
-      
-      return response;
-    } catch (error) {
-      console.warn('⚠️ Utilisation des données simulées');
-      const response = await mockAPI.orders.update(id, { status });
-      
-      // Déclencher un événement même en mode mock
-      window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
-        detail: { orderId: id, status, order: orderDetails || response.data }
-      }));
-      
-      return response;
-    }
-  },
-
-  getAllOrders: async (page = 1, limit = 20) => {
-    try {
-      const response = await API.get("/orders", { params: { page, limit } });
-      // Le backend retourne { orders, page, totalPages, total } - normaliser la réponse
-      const data = response.data;
-      if (data && !Array.isArray(data) && data.orders) {
-        response.data = data.orders;
-        response.pagination = { page: data.page, totalPages: data.totalPages, total: data.total };
-      }
-      return response;
-    } catch (error) {
-      console.warn('⚠️ Utilisation des données simulées');
-      return await mockAPI.orders.getAll();
-    }
-  },
-
-  deleteOrder: async (id) => {
-    try {
-      return await API.delete(`/orders/${id}`);
-    } catch (error) {
-      console.warn('⚠️ Utilisation des données simulées');
-      return await mockAPI.orders.delete(id);
-    }
-  },
+  cancel: async (orderId) => (await client.patch(`/orders/${id(orderId)}/cancel`)).data,
 };
 
 export default ordersAPI;
