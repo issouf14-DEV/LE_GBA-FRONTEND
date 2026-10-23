@@ -11,7 +11,7 @@
     "check": "biome check",
     "lint": "eslint .",
     "check:size": "node scripts/check-size.js",
-    "verify": "biome check && eslint . && node scripts/check-size.js && vitest run && vite build && node scripts/check-bundle.js",
+    "verify": "biome check && eslint . && node scripts/check-size.js && node scripts/check-imports.js && vitest run && vite build && node scripts/check-bundle.js",
     "test": "vitest run",
     "check:bundle": "node scripts/check-bundle.js",
     "test:e2e": "vite build && node tests/e2e/pentest.mjs && node tests/e2e/a11y.mjs"
