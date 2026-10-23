@@ -1691,7 +1691,7 @@
     @apply bg-white shadow-xl hover:scale-105 hover:shadow-2xl;
   }
   .feature-card--accent {
-    @apply border-t-4 border-t-red-600 bg-white shadow-xl hover:scale-105;
+    @apply bg-white shadow-xl hover:scale-105 hover:shadow-2xl;
   }
   .feature-card__icon {
     @apply mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-700 text-white shadow-lg;

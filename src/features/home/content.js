@@ -8,7 +8,7 @@ export const HERO_SLIDES = [
     background: unsplash('1549399542-7e3f8b79c341', 1600),
     backgroundSm: unsplash('1549399542-7e3f8b79c341', 800),
     carImage: unsplash('1503736334956-4c8f8e92946d'),
-    badge: 'Nouveautés 2025',
+    badge: `Nouveautés ${new Date().getFullYear()}`,
     title: 'Votre voyage commence ici',
     subtitle: "Des véhicules d'exception pour des moments inoubliables",
     description:

@@ -12,7 +12,7 @@ export function OffersSection() {
           <p className="section-subtitle">
             Profitez d'offres exceptionnelles sur l'ensemble de la gamme.{' '}
             <Link to="/vehicles" className="link-primary">
-              Je profite des offres*
+              Je profite des offres
             </Link>
           </p>
         </header>
@@ -27,7 +27,7 @@ export function OffersSection() {
               <div className="offer-card__body">
                 <h3 className="offer-card__title">{offer.title}</h3>
                 <p className="offer-card__price">
-                  à partir de <strong>{offer.monthlyPrice}</strong>*
+                  à partir de <strong>{offer.monthlyPrice}</strong>
                 </p>
                 <Link
                   to={`/vehicles?search=${encodeURIComponent(offer.search)}`}
