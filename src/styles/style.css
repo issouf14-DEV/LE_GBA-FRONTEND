@@ -546,7 +546,7 @@
     @apply rounded-full p-1 transition-colors hover:bg-amber-50 focus:outline-none;
   }
   .header-login {
-    @apply hidden items-center gap-2 rounded-lg bg-gradient-to-r from-amber-900 to-amber-800 px-4 py-2 font-semibold text-white shadow-md transition-all hover:shadow-xl md:flex;
+    @apply hidden items-center gap-2 rounded-lg bg-gradient-to-r from-[#5a1111] to-red-800 px-4 py-2 font-semibold text-white shadow-md transition-all hover:from-[#401010] hover:to-[#5a1111] hover:shadow-xl md:flex;
   }
   .header-login svg {
     @apply h-4 w-4;
@@ -590,7 +590,7 @@
     @apply bg-amber-50 text-amber-900;
   }
   .mobile-menu__login {
-    @apply mt-4 flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-amber-900 to-amber-800 px-4 py-3 font-semibold text-white;
+    @apply mt-4 flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#5a1111] to-red-800 px-4 py-3 font-semibold text-white hover:from-[#401010] hover:to-[#5a1111];
   }
   .mobile-menu__login svg {
     @apply h-5 w-5;
