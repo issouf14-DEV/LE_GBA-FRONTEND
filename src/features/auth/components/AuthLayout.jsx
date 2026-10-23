@@ -1,4 +1,5 @@
-import { CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 // Noms de classes écrits en entier : Tailwind supprime ceux qu'il ne trouve pas dans le code
@@ -38,6 +39,9 @@ export function AuthLayout({ variant = 'login', aside, title, subtitle, children
         </aside>
 
         <main className="auth-main">
+          <Link to="/" className="auth-home">
+            <ArrowLeft aria-hidden="true" /> Retour à l'accueil
+          </Link>
           <header className="auth-header">
             <h1 className="auth-title">{title}</h1>
             {subtitle && <p className="auth-subtitle">{subtitle}</p>}

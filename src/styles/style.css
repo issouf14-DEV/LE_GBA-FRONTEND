@@ -288,6 +288,12 @@
   .auth-main {
     @apply bg-white px-6 py-10 sm:px-10;
   }
+  .auth-home {
+    @apply mb-6 inline-flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-red-700;
+  }
+  .auth-home svg {
+    @apply h-4 w-4;
+  }
   .auth-header {
     @apply mb-8 text-center md:text-left;
   }
