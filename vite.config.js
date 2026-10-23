@@ -12,6 +12,8 @@ export default defineConfig(({ mode }) => ({
   esbuild: mode === 'production' ? { drop: ['console', 'debugger'] } : {},
   server: {
     port: 5173,
+    // npm run dev ouvre le navigateur directement sur l'accueil
+    open: '/',
     strictPort: false,
     proxy: {
       '/api': {
