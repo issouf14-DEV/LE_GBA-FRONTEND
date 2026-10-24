@@ -1,4 +1,5 @@
 import client from '@/api/client';
+import { fetchAllPages } from '@/api/pagination';
 
 const id = (value) => encodeURIComponent(value);
 const toList = (data) => (Array.isArray(data) ? data : data?.orders || []);
@@ -12,7 +13,9 @@ export const ordersAPI = {
     return data;
   },
   getMine: async () => toList((await client.get('/orders/mine')).data),
-  getAll: async (params = { limit: 100 }) => toList((await client.get('/orders', { params })).data),
+  // Admin : toutes les commandes, page par page (le serveur limite à 100 par page)
+  getAll: () =>
+    fetchAllPages(async (params) => (await client.get('/orders', { params })).data, 'orders'),
   // Admin : en_attente | validee | rejetee | terminee (l'email au client est envoyé par le serveur)
   updateStatus: async (orderId, status, order = null) => {
     const { data } = await client.patch(`/orders/${id(orderId)}/status`, { status });

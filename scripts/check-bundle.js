@@ -11,8 +11,16 @@ const RULES = [
   { name: 'clé privée', pattern: /-----BEGIN [A-Z ]*PRIVATE KEY-----/ },
   { name: 'chaîne de connexion MongoDB', pattern: /mongodb(\+srv)?:\/\/[^"'\s]+@/ },
   { name: 'JWT en dur', pattern: /eyJ[A-Za-z0-9_-]{15,}\.eyJ[A-Za-z0-9_-]{15,}\./ },
-  { name: 'mot de passe en dur', pattern: /password123/ },
+  // Valeur littérale affectée à un champ « password » (les formulaires vides passent)
+  {
+    name: 'mot de passe en dur',
+    pattern: /["']?password["']?\s*[:=]\s*["'][^"'\s]{6,}["']/i,
+  },
   { name: 'adresse du backend (doit passer par /api)', pattern: /le-gba-backend\.onrender\.com/ },
+  {
+    name: 'secret du proxy (ajouté par Vercel, jamais par le navigateur)',
+    pattern: /PROXY_SECRET|x-proxy-auth/i,
+  },
   { name: 'token dans le stockage du navigateur', pattern: /localStorage\.setItem\(\s*["']token/ },
   { name: 'token Bearer (la session passe par des cookies httpOnly)', pattern: /Bearer / },
   { name: 'instruction debugger', pattern: /\bdebugger\b/ },

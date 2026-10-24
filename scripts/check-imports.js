@@ -5,7 +5,12 @@ import { execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { posix } from 'node:path';
 
-const tracked = new Set(execSync('git ls-files', { encoding: 'utf8' }).split('\n').filter(Boolean));
+// Fichiers suivis + nouveaux fichiers non ignorés (ceux qu'un « git add -A » enverra)
+const tracked = new Set(
+  execSync('git ls-files --cached --others --exclude-standard', { encoding: 'utf8' })
+    .split('\n')
+    .filter(Boolean)
+);
 const EXTENSIONS = ['', '.js', '.jsx', '/index.js', '/index.jsx'];
 const IMPORT = /(?:from\s+|import\(\s*)['"]((?:@\/|\.)[^'"]+)['"]/g;
 

@@ -22,11 +22,14 @@ export const SEAT_OPTIONS = ['2', '4', '5', '7', '8'].map((v) => ({
   label: `${v} places`,
 }));
 
-const IMAGE_PATTERN = /^(https:\/\/|data:image\/(png|jpe?g|webp);base64,)/;
+// Formats acceptés par le serveur : URL https, fichier encodé (image/jpg refusé) ou photo
+// déjà hébergée par l'API (modification d'un véhicule sans changer sa photo)
+const IMAGE_PATTERN = /^(https:\/\/|data:image\/(png|jpeg|webp);base64,)/;
+const STORED_IMAGE = /^\/api\/vehicles\/[a-f0-9]{24}\/image(\?v=\d+)?$/;
 const imageField = trimmed(
   z.maxLength(2_900_000, 'Image trop lourde (2 Mo maximum)'),
   refine(
-    (value) => !value || IMAGE_PATTERN.test(value),
+    (value) => !value || IMAGE_PATTERN.test(value) || STORED_IMAGE.test(value),
     'Image invalide (URL https ou fichier JPEG/PNG/WebP)'
   )
 );

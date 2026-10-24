@@ -3,9 +3,8 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const config = JSON.parse(readFileSync('vercel.json', 'utf8'));
-const headers = Object.fromEntries(
-  config.headers.find((rule) => rule.source === '/(.*)').headers.map((h) => [h.key, h.value])
-);
+// En-têtes appliqués à tout le site (route « /(.*) » qui continue vers les suivantes)
+const headers = config.routes.find((route) => route.src === '/(.*)' && route.continue).headers;
 const csp = Object.fromEntries(
   headers['Content-Security-Policy'].split(';').map((part) => {
     const [name, ...values] = part.trim().split(/\s+/);
@@ -68,12 +67,5 @@ describe('Content-Security-Policy', () => {
       expect(values, directive).not.toContain('*');
       expect(values, directive).not.toContain('https:');
     }
-  });
-});
-
-describe('Réécritures', () => {
-  it('relaie /api vers le backend en HTTPS', () => {
-    const api = config.rewrites.find((rule) => rule.source.startsWith('/api'));
-    expect(api.destination.startsWith('https://')).toBe(true);
   });
 });

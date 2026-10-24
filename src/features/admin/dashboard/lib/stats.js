@@ -1,50 +1,51 @@
 import { normalizeOrder } from '@/features/orders/lib/normalizeOrder';
 import { ORDER_STATUSES } from '@/features/orders/lib/orderStatus';
 
-const MONTHS = 6;
+// Compteur renvoyé par le serveur : tout ce qui n'est pas un nombre positif vaut 0
+const count = (value) => {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : 0;
+};
 
-// Six derniers mois (année comprise, pour ne pas mélanger mars 2024 et mars 2025)
-function monthlySeries(orders) {
-  const now = new Date();
-  return Array.from({ length: MONTHS }, (_, index) => {
-    const month = new Date(now.getFullYear(), now.getMonth() - (MONTHS - 1 - index), 1);
-    const inMonth = orders.filter((order) => {
-      const date = new Date(order.createdAt);
-      return date.getFullYear() === month.getFullYear() && date.getMonth() === month.getMonth();
-    });
-    return {
-      name: month.toLocaleDateString('fr-FR', { month: 'short' }),
-      revenus: inMonth.reduce((sum, order) => sum + order.totalPrice, 0),
-      commandes: inMonth.length,
-    };
+// Mois court en français (« janv. »), calculé en UTC pour ne pas dépendre du fuseau
+export const monthName = (year, month) =>
+  new Date(Date.UTC(year, month - 1, 1)).toLocaleDateString('fr-FR', {
+    month: 'short',
+    timeZone: 'UTC',
   });
+
+// Six derniers mois, déjà agrégés par le serveur (du plus ancien au plus récent)
+function monthlySeries(monthly) {
+  return (Array.isArray(monthly) ? monthly : []).map((entry) => ({
+    name: monthName(Number(entry?.year), Number(entry?.month)),
+    revenus: count(entry?.revenus),
+    commandes: count(entry?.commandes),
+  }));
 }
 
-function statusSeries(orders) {
+// Seuls les statuts connus sont affichés (lecture par Object.hasOwn, sans prototype)
+function statusSeries(byStatus) {
+  const source = byStatus && typeof byStatus === 'object' ? byStatus : {};
   return Object.entries(ORDER_STATUSES)
     .map(([key, { label }]) => ({
       name: label,
-      value: orders.filter((o) => o.status === key).length,
+      value: Object.hasOwn(source, key) ? count(source[key]) : 0,
     }))
     .filter((item) => item.value > 0);
 }
 
-export function computeStats({ orders: rawOrders, users, vehicles }) {
-  const orders = rawOrders.map(normalizeOrder);
-  // Seules les commandes validées ou terminées comptent dans le chiffre d'affaires
-  const revenueOrders = orders.filter((o) => o.status === 'validee' || o.status === 'terminee');
-
+// Réponse de GET /api/admin/stats -> forme attendue par le tableau de bord
+export function toDashboardStats(data = {}) {
+  const months = monthlySeries(data?.monthly);
   return {
-    totalOrders: orders.length,
-    pendingOrders: orders.filter((o) => o.status === 'en_attente').length,
-    totalRevenue: revenueOrders.reduce((sum, o) => sum + o.totalPrice, 0),
-    totalUsers: users.length,
-    totalVehicles: vehicles.length,
-    monthly: monthlySeries(revenueOrders),
-    monthlyOrders: monthlySeries(orders),
-    byStatus: statusSeries(orders),
-    recentOrders: [...orders]
-      .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
-      .slice(0, 5),
+    totalOrders: count(data?.totalOrders),
+    pendingOrders: count(data?.pendingOrders),
+    totalRevenue: count(data?.totalRevenue),
+    totalUsers: count(data?.totalUsers),
+    totalVehicles: count(data?.totalVehicles),
+    monthly: months.map(({ name, revenus }) => ({ name, revenus })),
+    monthlyOrders: months.map(({ name, commandes }) => ({ name, commandes })),
+    byStatus: statusSeries(data?.byStatus),
+    recentOrders: (Array.isArray(data?.recentOrders) ? data.recentOrders : []).map(normalizeOrder),
   };
 }

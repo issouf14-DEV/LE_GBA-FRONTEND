@@ -117,7 +117,16 @@ describe('Formulaire véhicule (admin)', () => {
     'data:image/svg+xml;base64,PHN2Zz4=',
     'http://insecure.example/a.png',
     '//evil.example/a.png',
+    'data:image/jpg;base64,/9j/',
+    '/api/vehicles/../admin/image',
+    '/api/vehicles/507f1f77bcf86cd799439011/image?v=1&x=2',
   ])('image « %s » refusée', (image) => expect(ok(vehicleSchema, { ...base, image })).toBe(false));
+  it.each([
+    'https://cdn.example/a.png',
+    'data:image/jpeg;base64,/9j/',
+    '/api/vehicles/507f1f77bcf86cd799439011/image',
+    '/api/vehicles/507f1f77bcf86cd799439011/image?v=3',
+  ])('image « %s » acceptée', (image) => expect(ok(vehicleSchema, { ...base, image })).toBe(true));
   it('prix négatif ou absurde refusé', () => {
     expect(ok(vehicleSchema, { ...base, price: '-5' })).toBe(false);
     expect(ok(vehicleSchema, { ...base, price: '1e12' })).toBe(false);

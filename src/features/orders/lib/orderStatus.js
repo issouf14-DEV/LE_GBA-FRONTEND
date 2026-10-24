@@ -1,7 +1,6 @@
-import { Ban, CheckCircle2, CircleCheckBig, Clock, Truck, XCircle } from 'lucide-react';
-import { ownValue } from '@/lib/object';
+import { Ban, CheckCircle2, CircleCheckBig, Clock, XCircle } from 'lucide-react';
 
-// Source unique des statuts de commande (le backend mélange français et anglais)
+// Source unique des statuts de commande (les seules valeurs utilisées par le backend)
 export const ORDER_STATUSES = {
   en_attente: {
     label: 'En attente',
@@ -14,12 +13,6 @@ export const ORDER_STATUSES = {
     variant: 'success',
     icon: CheckCircle2,
     description: "Votre commande a été validée par l'équipe",
-  },
-  en_cours: {
-    label: 'En cours',
-    variant: 'info',
-    icon: Truck,
-    description: 'Votre véhicule est en cours de préparation',
   },
   terminee: {
     label: 'Terminée',
@@ -41,24 +34,9 @@ export const ORDER_STATUSES = {
   },
 };
 
-const ALIASES = {
-  pending: 'en_attente',
-  validated: 'validee',
-  confirmed: 'validee',
-  approved: 'validee',
-  in_progress: 'en_cours',
-  completed: 'terminee',
-  fulfilled: 'terminee',
-  rejected: 'rejetee',
-  cancelled: 'annulee',
-  canceled: 'annulee',
-};
-
 // Un statut inconnu (ou forgé) n'est jamais conservé tel quel
-export const normalizeStatus = (status) => {
-  const key = ownValue(ALIASES, status, status);
-  return typeof key === 'string' && Object.hasOwn(ORDER_STATUSES, key) ? key : 'en_attente';
-};
+export const normalizeStatus = (status) =>
+  typeof status === 'string' && Object.hasOwn(ORDER_STATUSES, status) ? status : 'en_attente';
 
 export function getOrderStatus(status) {
   const key = normalizeStatus(status);

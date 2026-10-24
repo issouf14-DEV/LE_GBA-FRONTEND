@@ -2,18 +2,22 @@ import { useEffect } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { AuthCard } from '@/features/auth/components/AuthLayout';
 import { ResetPasswordForm } from '@/features/auth/components/ResetPasswordForm';
+import { readResetToken } from '@/features/auth/lib/resetToken';
 
 export default function ResetPassword() {
   const { token: tokenInUrl } = useParams();
-  const { state } = useLocation();
+  const { hash, state } = useLocation();
   const navigate = useNavigate();
-  const token = tokenInUrl || state?.token;
+  // Jeton après le # (format actuel, jamais envoyé au serveur), ancien /:token ou state
+  const token = readResetToken({ param: tokenInUrl, hash, state });
+  const inAddressBar = Boolean(tokenInUrl || hash);
 
   // Le lien reçu par email contient un secret : on le retire aussitôt de la barre d'adresse
   // (historique, captures d'écran, partage du lien) en le gardant seulement en mémoire
   useEffect(() => {
-    if (tokenInUrl) navigate('/reset-password', { replace: true, state: { token: tokenInUrl } });
-  }, [tokenInUrl, navigate]);
+    if (inAddressBar)
+      navigate('/reset-password', { replace: true, state: token ? { token } : null });
+  }, [inAddressBar, token, navigate]);
 
   return (
     <AuthCard>
